@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EMF Camp Schedule</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    .timeline-container {
+      overflow-x: scroll;
+      white-space: nowrap;
+      position: relative;
+    }
+    .timeline-row {
+      display: block;
+      min-height: 2em; /*not ideal*/
+    }
+    .event-block {
+      height: 40px;
+      background-color: #FFA500;
+      border: 1px solid #333;
+      border-radius: 4px;
+      white-space: normal;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      padding: 5px;
+      color: #fff;
+    }
+    .timeline-block {
+      display: inline-block;
+      position: absolute;
+    }
+    .venue {
+      
+    }
+    .day {
+      background: purple;
+    }
+  </style>
+</head>
+<body class="bg-gray-100 text-gray-800">
+  <div class="container mx-auto my-8 p-4 bg-white shadow-md rounded">
+    <h1 class="text-2xl font-bold mb-4">EMF Camp Schedule</h1>
+    <div id="timeline" class="timeline-container"></div>
+  </div>
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>
+
