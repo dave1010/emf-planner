@@ -8,13 +8,14 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
     .timeline-container {
-      overflow-x: scroll;
       white-space: nowrap;
       position: relative;
     }
     .timeline-row {
-      display: block;
-      min-height: 2em; /*not ideal*/
+      display: flex;
+      align-items: center;
+      position: relative;
+      min-height: 5em; /*not ideal*/
     }
     .event-block {
       height: 40px;
@@ -26,21 +27,31 @@
       text-overflow: ellipsis;
       padding: 5px;
       color: #fff;
+      display: inline-block;
+      position: absolute;
     }
     .timeline-block {
       display: inline-block;
       position: absolute;
     }
+    .timeline-fixed {
+      position: sticky;
+      left: 0;
+    }
+    .timeline-events-wrapper {
+      display: inline-block;
+      white-space: nowrap;
+    }
     .venue {
       
     }
     .day {
-      background: purple;
+      background: rgba(131, 3, 131, 0.5);
     }
   </style>
 </head>
 <body class="bg-gray-100 text-gray-800">
-  <div class="container mx-auto my-8 p-4 bg-white shadow-md rounded">
+  <div class="xcontainer not-mx-auto xmy-8 xp-4 xbg-white shadow-md rounded">
     <h1 class="text-2xl font-bold mb-4">EMF Camp Schedule</h1>
     <div id="timeline" class="timeline-container"></div>
   </div>

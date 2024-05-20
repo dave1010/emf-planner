@@ -1,5 +1,6 @@
 import EventBlock from './EventBlock.js';
 import DaysRow from './DaysRow.js';
+import HoursRow from './HoursRow.js';
 
 
 class Timeline {
@@ -25,6 +26,8 @@ class Timeline {
     const daysRow = new DaysRow(startTime, endTime);
     this.domElement.appendChild(daysRow.domElement);
     
+    const hoursRow = new HoursRow(startTime, endTime);
+    this.domElement.appendChild(hoursRow.domElement);
 
 
     // Create timeline rows for each venue
@@ -34,7 +37,11 @@ class Timeline {
 
       const row = document.createElement('div');
       row.className = 'timeline-row';
-      row.innerHTML = `<h2 class="venue font-semibold mb-2">${venue.name}</h2>`;
+      row.innerHTML = `<h2 class="timeline-fixed venue font-semibold mb-2">${venue.name}</h2>`;
+
+      const container = document.createElement('div');
+      container.className = 'timeline-events-wrapper';
+      row.appendChild(container);
 
       // Place events on the timeline
       venue.events.forEach(event => {
@@ -42,7 +49,7 @@ class Timeline {
 
         eventBlock.positionBetween(startTime, endTime);
 
-        row.appendChild(eventBlock.domElement);
+        container.appendChild(eventBlock.domElement);
       });
 
       this.domElement.appendChild(row);

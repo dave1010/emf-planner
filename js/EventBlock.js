@@ -1,6 +1,11 @@
-class EventBlock {
+import TimelineBlock from "./TimelineBlock.js";
+
+class EventBlock extends TimelineBlock {
     constructor(event) {
+        super();
         this.event = event;
+        this.startDate = event.start_date;
+        this.endDate = event.end_date;
         this.title = event.title;
         this.domElement = this.render();
     }
@@ -12,15 +17,6 @@ class EventBlock {
         eventElement.innerText = this.title;
 
         return eventElement;
-    }
-
-    positionBetween(startTime, endTime) {
-        const timeRange = endTime - startTime;
-        const startOffset = ((this.event.start_date - startTime) / timeRange) * 100;
-        const duration = ((this.event.end_date - this.event.start_date) / timeRange) * 100;
-
-        this.domElement.style.left = `${startOffset}%`;
-        this.domElement.style.width = `${duration}%`;
     }
 }
 
