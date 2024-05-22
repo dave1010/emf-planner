@@ -37,7 +37,7 @@ class Timeline {
 
       const row = document.createElement('div');
       row.className = 'timeline-row';
-      row.innerHTML = `<h2 class="timeline-fixed venue font-semibold mb-2">${venue.name}</h2>`;
+      row.innerHTML = `<div class="timeline-fixed venue font-semibold mb-2"><h2>${venue.name}</h2></div>`;
 
       const container = document.createElement('div');
       container.className = 'timeline-events-wrapper';

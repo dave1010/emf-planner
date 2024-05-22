@@ -1,0 +1,133 @@
+/* color vars */
+
+/*dark green*/
+:root {
+    --dark-green: rgb(33, 48, 24);
+    --darker-green: rgb(23, 38, 14);
+    --blue: #196c88;
+    --cream: #cfccc0;
+    --dark-red: #33071c;
+    --light-green: rgb(175, 201, 68);
+}
+
+html,
+body {
+    background-color: var(--darker-green);
+    color: #fff;
+    font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    border: 0;
+    margin: 0;
+}
+
+a {
+    color: var(--blue);
+}
+
+header {
+    background-color: var(--dark-red);
+    color: #fff;
+    padding: 1em 0;
+    padding: 5px;
+}
+
+h1 {
+    margin: 0;
+    font-size: 1.1em;
+}
+
+h1 strong {
+    font-size: 1.3em;
+    color: var(--light-green);
+}
+
+header a {
+    color: var(--cream);
+}
+
+header .about {
+    float: right;
+}
+
+/* width of the screen */
+.timeline-wrapper {
+    overflow-x: scroll;
+    height: 80vh;
+}
+
+/* very wide */
+.timeline-container {
+    white-space: nowrap;
+    position: relative;
+}
+
+.timeline-row {
+    display: flex;
+    align-items: flex-start;
+    position: relative;
+    border-bottom: 1px solid #333;
+}
+
+/* fixed to top */
+.timeline-header-row {
+    position: sticky;
+    top: 0;
+}
+
+.event-block {
+    height: 32px;
+    background-color: var(--dark-green);
+    border: 1px solid #333;
+    border-radius: 4px;
+    white-space: normal;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    padding: 5px;
+    color: #fff;
+    display: inline-block;
+    position: absolute;
+    font-size: 14px;
+}
+
+.timeline-block {
+    display: inline-block;
+    position: absolute;
+}
+
+/* fixed to left */
+.timeline-fixed {
+    position: sticky;
+    left: 4px;
+}
+
+.timeline-events-wrapper {
+    display: inline-block;
+    white-space: nowrap;
+    margin-top: 19px; /*push down below venue*/
+    height: 45px;
+}
+
+.timeline-days-row {
+    min-height: 19px;
+    z-index: 1;
+}
+
+.timeline-hours-row {
+    min-height: 19px;
+    z-index: 1;
+    top: 19px;
+}
+
+.timeline-row .venue {
+    height: 19px;
+    color: var(--light-green);
+}
+
+.timeline-row .venue h2 {
+    margin: 0;
+    font-size: 1em;
+    font-weight: normal;
+}
+
+.day {
+    background: rgba(131, 3, 131, 0.5);
+}

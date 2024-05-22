@@ -18,7 +18,7 @@ class DayBlock extends TimelineBlock {
         dayBlock.innerText = this.startDate.toLocaleDateString('en-GB', { weekday: 'short' });
 
         // Generate a background color based on the day of the week
-        dayBlock.style.backgroundColor = `hsla(${(this.startDate.getDay() * 60) % 360}, 50%, 50%, 0.5)`;
+        dayBlock.style.backgroundColor = `hsla(${(this.startDate.getDay() * 60) % 360}, 50%, 30%, 1)`;
         return dayBlock;
     }
 }
@@ -34,6 +34,7 @@ class DaysRow {
       const daysRow = document.createElement('div');
       daysRow.className = 'timeline-days-row';
       daysRow.classList.add('timeline-row');
+      daysRow.classList.add('timeline-header-row');
       
       // start with startTime. this may not be a full day
       let currentDate = new Date(this.startTime);

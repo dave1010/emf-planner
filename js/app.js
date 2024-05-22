@@ -2,7 +2,7 @@ import Schedule from "./Schedule.js";
 import Timeline from "./Timeline.js";
 
 const fetchData = () => {
-  return fetch('https://www.emfcamp.org/schedule/2024.json')
+  return fetch('https://www.emfcamp.org/schedule/2022.json')
     .then(response => {
       if (!response.ok) {
         throw new Error('Network response was not ok');

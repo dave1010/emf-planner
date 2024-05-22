@@ -4,55 +4,19 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>EMF Camp Schedule</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
-  <script src="https://cdn.tailwindcss.com"></script>
-  <style>
-    .timeline-container {
-      white-space: nowrap;
-      position: relative;
-    }
-    .timeline-row {
-      display: flex;
-      align-items: center;
-      position: relative;
-      min-height: 5em; /*not ideal*/
-    }
-    .event-block {
-      height: 40px;
-      background-color: #FFA500;
-      border: 1px solid #333;
-      border-radius: 4px;
-      white-space: normal;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      padding: 5px;
-      color: #fff;
-      display: inline-block;
-      position: absolute;
-    }
-    .timeline-block {
-      display: inline-block;
-      position: absolute;
-    }
-    .timeline-fixed {
-      position: sticky;
-      left: 0;
-    }
-    .timeline-events-wrapper {
-      display: inline-block;
-      white-space: nowrap;
-    }
-    .venue {
-      
-    }
-    .day {
-      background: rgba(131, 3, 131, 0.5);
-    }
-  </style>
+  <link rel="stylesheet" href="/style.css">
+  <link rel="icon" href="https://avatars.githubusercontent.com/u/50682?v=4">
 </head>
-<body class="bg-gray-100 text-gray-800">
-  <div class="xcontainer not-mx-auto xmy-8 xp-4 xbg-white shadow-md rounded">
-    <h1 class="text-2xl font-bold mb-4">EMF Camp Schedule</h1>
+<body>
+  <header>
+    <div class="about">
+      <!-- controls -->
+      <a href="https://github.com/dave1010/emf-planner" target="_blank">About</a>
+    </div>
+    <h1><strong>E</strong>lectro<strong>M</strong>agnetic field <strong>P</strong>lanner</h1>
+
+  </header>
+  <div class="timeline-wrapper">
     <div id="timeline" class="timeline-container"></div>
   </div>
   <script type="module" src="js/app.js"></script>

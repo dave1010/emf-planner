@@ -24,20 +24,21 @@ class HourBlock extends TimelineBlock {
         const dayBlock = document.createElement('div');
         dayBlock.className = 'day';
         dayBlock.classList.add('timeline-block');
+        
         // inner text to 24 hour time
         dayBlock.innerText = this.startDate.toLocaleTimeString('en-GB', { hour: 'numeric' }) + ':00';
 
         // Generate a background color based on the time. Midnight is dark blue, midday is yellow.
         const hour = this.startDate.getHours();
-        const darkBlue = [0, 0, 139]; // RGB for dark blue
-        const yellow = [255, 255, 0]; // RGB for yellow
+        const darkBlue = [0, 0, 139]; // dark blue
+        const yellow = [180, 180, 0]; // dark yellow
         
         // Calculate the interpolation factor to go from 0 to 1 to 0 over 24 hours
         let factor = hour < 12 ? hour / 12 : (24 - hour) / 12;
         
         const interpolatedColor = interpolateColor(darkBlue, yellow, factor);
         
-        const backgroundColor = `rgba(${interpolatedColor[0]}, ${interpolatedColor[1]}, ${interpolatedColor[2]}, 0.5)`;
+        const backgroundColor = `rgba(${interpolatedColor[0]}, ${interpolatedColor[1]}, ${interpolatedColor[2]}, 1)`;
         
         dayBlock.style.backgroundColor = backgroundColor;
 
@@ -54,9 +55,10 @@ class HoursRow {
   
     render() {
       const row = document.createElement('div');
-      row.className = 'timeline-days-row';
+      row.className = 'timeline-hours-row';
       row.classList.add('timeline-row');
-      
+      row.classList.add('timeline-header-row');
+
       // start with startTime. this may not be a full day
       let currentDate = new Date(this.startTime);
 
