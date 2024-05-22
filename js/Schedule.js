@@ -48,7 +48,13 @@ class Schedule {
         const schedule = new Schedule();
 
         events.forEach(event => {
-            const eventObj = new Event(event.title, event.start_date, event.end_date, event.venue);
+            const eventObj = new Event(
+                event.title,
+                event.start_date,
+                event.end_date,
+                event.venue,
+                event.link
+            );
             schedule.addEvent(eventObj);
         });
 

@@ -8,7 +8,7 @@ function interpolateColor(color1, color2, factor) {
     return result;
 }
 
-class HourBlock extends TimelineBlock {
+class HourTickBlock extends TimelineBlock {
     constructor(date) {
         super();
         this.startDate = date;
@@ -21,13 +21,10 @@ class HourBlock extends TimelineBlock {
     }
 
     render() {
-        const dayBlock = document.createElement('div');
-        dayBlock.className = 'hour';
-        dayBlock.classList.add('timeline-block');
+        const block = document.createElement('div');
+        block.className = 'hourTick';
+        block.classList.add('timeline-block');
         
-        // inner text to 24 hour time
-        dayBlock.innerText = this.startDate.toLocaleTimeString('en-GB', { hour: 'numeric' }) + ':00';
-
         // Generate a background color based on the time. Midnight is dark blue, midday is yellow.
         const hour = this.startDate.getHours();
         const darkBlue = [0, 0, 139]; // dark blue
@@ -40,13 +37,13 @@ class HourBlock extends TimelineBlock {
         
         const backgroundColor = `rgba(${interpolatedColor[0]}, ${interpolatedColor[1]}, ${interpolatedColor[2]}, 1)`;
         
-        dayBlock.style.backgroundColor = backgroundColor;
+        block.style.backgroundColor = backgroundColor;
 
-        return dayBlock;
+        return block;
     }
 }
 
-class HoursRow {
+class HoursTicksRow {
     constructor(startTime, endTime) {
       this.startTime = startTime;
       this.endTime = endTime;
@@ -55,7 +52,7 @@ class HoursRow {
   
     render() {
       const row = document.createElement('div');
-      row.className = 'timeline-hours-row';
+      row.className = 'timeline-hoursticks-row';
       row.classList.add('timeline-row');
       row.classList.add('timeline-header-row');
 
@@ -64,7 +61,7 @@ class HoursRow {
 
       // loop until we reach endTime
       while (currentDate < this.endTime) {
-        const block = new HourBlock(currentDate);
+        const block = new HourTickBlock(currentDate);
         block.positionBetween(this.startTime, this.endTime);
         row.appendChild(block.domElement);
         // add 1 hour
@@ -75,4 +72,4 @@ class HoursRow {
     
   }
 
-  export default HoursRow;
+  export default HoursTicksRow;

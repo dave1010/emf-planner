@@ -17,7 +17,15 @@ body {
     font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
     border: 0;
     margin: 0;
+    height: 100%;
 }
+
+.container {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
 
 a {
     color: var(--blue);
@@ -50,6 +58,7 @@ header .about {
 
 /* width of the screen */
 .timeline-wrapper {
+    flex: 1;
     overflow-x: scroll;
     height: 80vh;
 }
@@ -73,7 +82,7 @@ header .about {
     top: 0;
 }
 
-.event-block {
+.timeline-events-wrapper .event-block {
     height: 32px;
     background-color: var(--dark-green);
     border: 1px solid #333;
@@ -86,11 +95,25 @@ header .about {
     display: inline-block;
     position: absolute;
     font-size: 14px;
+    text-decoration: none;
+}
+
+.timeline-events-wrapper .event-block.fav {
+    border: 1px dashed var(--light-green)
+}
+
+.timeline-events-wrapper .event-block:hover {
+    background-color: var(--light-green);
+    color: var(--dark-green);
 }
 
 .timeline-block {
     display: inline-block;
     position: absolute;
+}
+
+.timeline-header-row .hour, .timeline-header-row .day {
+    padding: 0 5px;
 }
 
 /* fixed to left */
@@ -115,6 +138,11 @@ header .about {
     min-height: 19px;
     z-index: 1;
     top: 19px;
+}
+
+.hourTick {
+    height: 100vh;
+    opacity: 0.15;
 }
 
 .timeline-row .venue {

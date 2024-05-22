@@ -6,3 +6,7 @@ A basic web app that takes the [schedule](https://www.emfcamp.org/schedule/2024)
 Status: works but not great.
 
 **[Demo](https://664a7ec70d17a817905c2eca--resilient-vacherin-f42795.netlify.app/)**
+
+Inspired by the
+[Teddy Rocks Festival clash finder](https://teddyrocks.co.uk/lineup/clashfinder)
+and [bus timetables](https://www.morebus.co.uk/services/WDBC/m2).

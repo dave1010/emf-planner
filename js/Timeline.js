@@ -1,6 +1,7 @@
 import EventBlock from './EventBlock.js';
 import DaysRow from './DaysRow.js';
 import HoursRow from './HoursRow.js';
+import HoursTicksRow from './HoursTicksRow.js';
 
 
 class Timeline {
@@ -29,6 +30,8 @@ class Timeline {
     const hoursRow = new HoursRow(startTime, endTime);
     this.domElement.appendChild(hoursRow.domElement);
 
+    const hoursTicksRow = new HoursTicksRow(startTime, endTime);
+    this.domElement.appendChild(hoursTicksRow.domElement);
 
     // Create timeline rows for each venue
     for (const venue of this.schedule.getVenues()) {
