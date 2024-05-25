@@ -7,9 +7,12 @@ class EventBlock extends TimelineBlock {
         this.startDate = event.start_date;
         this.endDate = event.end_date;
         this.title = event.title;
-        this.isFav = Math.random() < 0.2; // random favs for now
         this.link = event.link;
         this.domElement = this.render();
+
+        this.event.onFavouriteChange = (isFav) => this.updateFavouriteStatus(isFav);
+        
+        // don't bother running updateFavouriteStatus on initialisation
     }
 
     render() {
@@ -18,12 +21,13 @@ class EventBlock extends TimelineBlock {
         eventElement.target = '_blank';
         eventElement.className = 'event-block';
         eventElement.classList.add('timeline-block');
-        if (this.isFav) {
-            eventElement.classList.add('fav');
-        }
         eventElement.innerText = this.title;
 
         return eventElement;
+    }
+
+    updateFavouriteStatus(isFav) {
+        this.domElement.classList[isFav ? 'add' : 'remove']('fav');
     }
 }
 

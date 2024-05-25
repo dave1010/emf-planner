@@ -1,27 +1,31 @@
 import Schedule from "./Schedule.js";
 import Timeline from "./Timeline.js";
+import FavouritesDatabase from "./FavouritesDatabase.js";
 
-const fetchData = () => {
-  return fetch('https://www.emfcamp.org/schedule/2024.json')
-    .then(response => {
-      if (!response.ok) {
-        throw new Error('Network response was not ok');
-      }
-      return response.json();
-    });
+const fetchData = async (url) => {
+  try {
+    const response = await fetch(url);
+    return await response.ok ? response.json() : null;
+  } catch (error) {
+    return null;
+  }
 };
 
-const createTimelineFromJson = (data) => {
+document.addEventListener('DOMContentLoaded', async () => {
+  const data = await fetchData('https://www.emfcamp.org/schedule/2024.json');
+
+  if (!data) {
+    alert('Failed to load schedule data')
+  }
+
   const schedule = Schedule.createFromJson(data);
   const timelineElement = document.getElementById('timeline');
-  new Timeline(timelineElement, schedule);
-};
+  const timeline = new Timeline(timelineElement, schedule);
 
-document.addEventListener('DOMContentLoaded', () => {
-  fetchData()
-    .then(createTimelineFromJson)
-    .catch(error => {
-      console.error('Error fetching the schedule:', error);
-    });
+  const favouritesDatabase = new FavouritesDatabase(window.localStorage, 'favourites', schedule);
+  
+  const favouritesFileInput = document.getElementById('favouritesJsonFileInput');
+  favouritesDatabase.attachToFileInput(favouritesFileInput);
+
+  //favouritesDatabase.save([412]);
 });
-

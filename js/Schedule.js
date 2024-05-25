@@ -2,11 +2,12 @@ import Venue from './Venue.js';
 import Event from './Event.js';
 
 /**
- * Represents a list of events grouped by venue
+ * Represents a list of events
  */
 class Schedule {
     constructor() {
-        this.venues = {};
+        this.venues = {}; // grouped by venue
+        this.events = [];
     }
 
     getStartDate() {
@@ -31,6 +32,8 @@ class Schedule {
     }
 
     addEvent(event) {
+        this.events.push(event);
+
         // Group events by venue
         const venueName = event.venue;
         if (!this.venues[venueName]) {
@@ -44,23 +47,21 @@ class Schedule {
         return Object.values(this.venues);
     }
 
+    setFavourites(listOfIds) {
+        this.events.forEach(event => {
+            event.isFavourite = listOfIds.includes(event.id);
+        });
+    }
+
     static createFromJson(events) {
         const schedule = new Schedule();
 
         events.forEach(event => {
-            const eventObj = new Event(
-                event.title,
-                event.start_date,
-                event.end_date,
-                event.venue,
-                event.link
-            );
-            schedule.addEvent(eventObj);
+            schedule.addEvent(Event.createFromJson(event));
         });
 
         return schedule;
     }
 }
-
 
 export default Schedule;

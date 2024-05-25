@@ -10,17 +10,33 @@
 </head>
 
 <body>
+  
   <div class="container">
     <header>
-      <div class="about">
-        <!-- controls -->
+
+      <h1><strong>E</strong>lectro<strong>M</strong>agnetic Field <strong>P</strong>lanner</h1>
+
+      <div class="header-right">
+        <!-- controls button to toggle visiblity of next element -->
+        <button onclick="this.nextElementSibling.style.display = this.nextElementSibling.style.display === 'block' ? 'none' : 'block'">Contols 🔽 </button>
+        <div class="controls" style="display:none">
+          <div>
+            <p>Favourites have to be manually imported <em>whenever you change them</em> but it only takes a second:</p>
+            <ol>
+              <li>Make sure you can see your favourites on the <a href="https://www.emfcamp.org/favourites" target="_blank"> EMF site</a>.</li>
+              <li><a href="https://www.emfcamp.org/favourites.json" target="_blank">Long press or right click on this link</a>.</li>
+              <li>Select <em>Download link</em> or <em>Save Link As...</em></li>
+              <li>Upload the downloaded <code>favourites.json</code> file below.</li>
+            </ol>
+            <input type="file" id="favouritesJsonFileInput" accept=".json" />
+          </div>
+        </div>
         <a href="https://github.com/dave1010/emf-planner" target="_blank">About</a>
       </div>
-      <h1><strong>E</strong>lectro<strong>M</strong>agnetic Field <strong>P</strong>lanner</h1>
 
     </header>
     <div class="timeline-wrapper">
-      <div id="timeline" class="timeline-container"></div>
+      <div id="timeline" class="timeline-container">Loading...</div>
     </div>
   </div>
   <script type="module" src="js/app.js"></script>

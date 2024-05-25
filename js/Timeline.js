@@ -22,6 +22,8 @@ class Timeline {
     const startTime = this.schedule.getStartDate();
     const endTime = this.schedule.getEndDate();
 
+    this.domElement.innerHTML = ''; // remove loading message
+
     this.domElement.style.width = '16000px';
 
     const daysRow = new DaysRow(startTime, endTime);
