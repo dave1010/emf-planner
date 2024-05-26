@@ -18,7 +18,7 @@ class DayBlock extends TimelineBlock {
         dayBlock.innerText = this.startDate.toLocaleDateString('en-GB', { weekday: 'short' });
 
         // Generate a background color based on the day of the week
-        dayBlock.style.backgroundColor = `hsla(${(this.startDate.getDay() * 60) % 360}, 50%, 30%, 1)`;
+        dayBlock.style.backgroundColor = `hsla(${(this.startDate.getDay() * 40) % 360}, 50%, 30%, 1)`;
         return dayBlock;
     }
 }

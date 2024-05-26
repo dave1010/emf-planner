@@ -15,10 +15,21 @@ Inspired by the
 [Teddy Rocks Festival clash finder](https://teddyrocks.co.uk/lineup/clashfinder)
 and [bus timetables](https://www.morebus.co.uk/services/WDBC/m2).
 
+## Development
+
 The code is currently vanilla HTML and JavaScript.
+It's compiled with WebPack just for cache invalidation.
+
+```bash
+npm install
+npm run build
+cd dist && python3 -m http.server
+```
 
 See the issues list for planned features. Contributions welcome.
 
 MIT License. Copyright (c) 2024 Dave Hulbert
+
+## Screenshot
 
 ![Screenshot](img/screenshot.png)
