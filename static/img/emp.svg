@@ -1,0 +1,25 @@
+<svg width="256" height="256" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+  <g transform="scale(1.33)">
+    <rect width="150" height="150" fill="none" />
+    <g fill="#7E3A4D">
+      <rect x="0" y="10" width="150" height="10" />
+
+      <rect x="0" y="30" width="30" height="10" />
+      <rect x="0" y="50" width="30" height="10" />
+
+      <rect x="120" y="30" width="30" height="10" />
+      <rect x="120" y="50" width="30" height="10" />
+
+      <rect x="0" y="70" width="150" height="10" />
+      <rect x="0" y="90" width="150" height="10" />
+      <rect x="0" y="110" width="150" height="10" />
+    </g>
+    <g fill="#C3D748">
+      <ellipse cx="40" cy="75" rx="10" ry="5" />
+      <ellipse cx="60" cy="95" rx="10" ry="5" />
+      <ellipse cx="80" cy="75" rx="10" ry="5" />
+      <ellipse cx="100" cy="95" rx="10" ry="5" />
+    </g>
+    <text x="30" y="62" font-family="sans" font-size="44" fill="#C3D748">EMP</text>
+  </g>
+</svg>
