@@ -6,6 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>EMP - EMF Planner</title>
   <link rel="icon" href="/img/emp.svg">
+  <link rel="manifest" href="manifest.json">
 </head>
 
 <body>
@@ -20,6 +21,7 @@
         <button onclick="this.nextElementSibling.style.display = this.nextElementSibling.style.display === 'block' ? 'none' : 'block'">Controls 🔽 </button>
         <div class="controls" style="display:none">
           <div>
+            <h2>Favourites</h2>
             <p>You need to manually re-import your favourites <em>whenever you change them</em>, but it only takes a second:</p>
             <ol>
               <li>Make sure you can see your favourites on the <a href="https://www.emfcamp.org/favourites" target="_blank"> EMF site</a>.</li>
@@ -28,6 +30,10 @@
               <li>Upload the downloaded <code>favourites.json</code> file below.</li>
             </ol>
             <input type="file" id="favouritesJsonFileInput" accept=".json" />
+          </div>
+          <div>
+            <h2>Add to home screen</h2>
+            <p>Tap your browser's menu or share button, then <strong>Add to Home screen</strong>.</p>
           </div>
         </div>
         <a href="https://github.com/dave1010/emf-planner" target="_blank">About</a>

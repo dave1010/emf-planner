@@ -1,0 +1,17 @@
+{
+    "name": "EMP - Electromagnetic field Planner",
+    "short_name": "EMP",
+    "start_url": "/index.html",
+    "display": "standalone",
+    "background_color": "#ffffff",
+    "theme_color": "#000000",
+    "description": "EMP is a schedule viewer for Electromagnetic Field.",
+    "icons": [
+      {
+        "src": "/img/emp.svg",
+        "sizes": "512x512",
+        "type": "image/svg+xml"
+      }
+    ]
+  }
+  
