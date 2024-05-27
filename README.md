@@ -2,7 +2,7 @@
 
 A web app to help you plan your time at Electromagnetic Field (EMF Camp), showing the schedule on a 2D timetable.
 
-## Open the planner at [emp.dave.engineer](https://emp.dave.engineer)
+## Open the planner at [➡️ emp.dave.engineer ⬅️](https://emp.dave.engineer)
 
 The app is unofficial but takes the [official EMF Camp 2024 schedule](https://www.emfcamp.org/schedule/2024)
 [API](https://developer.emfcamp.org/schedule/).
