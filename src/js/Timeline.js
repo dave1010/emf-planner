@@ -60,6 +60,13 @@ class Timeline {
       this.domElement.appendChild(row);
     }
   }
+
+  goToTime(date) {
+    console.log('goToTime', date);
+    const offset = this.dateToOffset(date);
+    console.log('offset', offset);
+    this.domElement.parentElement.scrollLeft = (offset * this.domElement.scrollWidth) / 100;
+  }
 }
 
 export default Timeline;

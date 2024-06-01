@@ -27,5 +27,8 @@ document.addEventListener('DOMContentLoaded', async () => {
   const favouritesFileInput = document.getElementById('favouritesJsonFileInput');
   favouritesDatabase.attachToFileInput(favouritesFileInput);
 
+  // go to 1 hour ago
+  timeline.goToTime(Date.now() - 60 * 60 * 1000);
+
   //favouritesDatabase.save([412]);
 });
