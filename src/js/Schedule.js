@@ -57,10 +57,25 @@ class Schedule {
         const schedule = new Schedule();
 
         events.forEach(event => {
-            schedule.addEvent(Event.createFromJson(event));
+            Schedule.normaliseEventOccurrences(event).forEach(occurrenceEvent => {
+                schedule.addEvent(Event.createFromJson(occurrenceEvent));
+            });
         });
 
         return schedule;
+    }
+
+    static normaliseEventOccurrences(event) {
+        if (!Array.isArray(event.occurrences)) {
+            return [event];
+        }
+
+        return event.occurrences.map(occurrence => ({
+            ...event,
+            ...occurrence,
+            occurrence,
+            occurrences: undefined,
+        }));
     }
 }
 
