@@ -12,7 +12,7 @@ const fetchData = async (url) => {
 };
 
 document.addEventListener('DOMContentLoaded', async () => {
-  const data = await fetchData('https://www.emfcamp.org/schedule/2024.json');
+  const data = await fetchData('https://www.emfcamp.org/schedule/2026.json');
 
   if (!data) {
     alert('Failed to load schedule data')
