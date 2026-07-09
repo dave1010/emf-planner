@@ -1,11 +1,12 @@
 class Event {
-  constructor(id, title, start_date, end_date, venue, link) {
+  constructor(id, title, start_date, end_date, venue, link, occurrence = null) {
     this.id = id;
     this.title = title;
     this.start_date = new Date(start_date);
     this.end_date = new Date(end_date);
     this.venue = venue;
     this.link = link;
+    this.occurrence = occurrence;
     this._isFavourite = false;
     this.onFavouriteChange = null; // Callback for changes
   }
@@ -27,13 +28,16 @@ class Event {
   }
 
   static createFromJson(json) {
+    const occurrence = json.occurrence || json;
+
     return new Event(
       json.id,
       json.title,
-      json.start_date,
-      json.end_date,
-      json.venue,
-      json.link
+      occurrence.start_date,
+      occurrence.end_date,
+      occurrence.venue,
+      json.link,
+      json.occurrence || null
     );
   }
 }
