@@ -47,6 +47,14 @@ class Schedule {
         return Object.values(this.venues);
     }
 
+    getEventTypes() {
+        return [...new Set(this.events.map(event => event.type).filter(Boolean))].sort();
+    }
+
+    getVenueNames() {
+        return Object.keys(this.venues).sort();
+    }
+
     setFavourites(listOfIds) {
         this.events.forEach(event => {
             event.isFavourite = listOfIds.includes(event.id);
