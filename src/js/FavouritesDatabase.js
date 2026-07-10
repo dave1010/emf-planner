@@ -26,7 +26,7 @@ class FavouritesDatabase {
     this.schedule.setFavourites(this.favourites);
   }
 
-  attachToFileInput(fileInput) {
+  attachToFileInput(fileInput, onSave = null) {
     fileInput.addEventListener('change', async (event) => {
       const file = event.target.files[0];
       const text = await file.text();
@@ -34,6 +34,9 @@ class FavouritesDatabase {
       const ids = json.map((event) => event.id);
       alert(`Imported ${ids.length} favourites!`);
       this.save(ids);
+      if (onSave) {
+        onSave(ids);
+      }
     });
   }
 }

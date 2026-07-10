@@ -65,6 +65,19 @@ header .header-right {
 
 header .controls {
     border: 1px solid var(--cream);
+    padding: 0 1em 1em;
+}
+
+.event-filters {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5em;
+}
+
+.event-filters label {
+    display: flex;
+    justify-content: space-between;
+    gap: 1em;
 }
 /************** TIMELINE **************/
 

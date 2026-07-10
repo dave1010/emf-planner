@@ -8,6 +8,12 @@ class Timeline {
   constructor(domElement, schedule) {
     this.domElement = domElement;
     this.schedule = schedule;
+    this.filters = {
+      favouritesOnly: false,
+      type: '',
+      official: '',
+      venue: '',
+    };
     this.render();
   }
 
@@ -16,6 +22,34 @@ class Timeline {
     const endTime = this.schedule.getEndDate();
     const timeRange = endTime - startTime;
     return ((date - startTime) / timeRange) * 100;
+  }
+
+  setFilters(filters) {
+    this.filters = {
+      ...this.filters,
+      ...filters,
+    };
+    this.render();
+  }
+
+  eventMatchesFilters(event) {
+    if (this.filters.favouritesOnly && !event.isFavourite) {
+      return false;
+    }
+
+    if (this.filters.type && event.type !== this.filters.type) {
+      return false;
+    }
+
+    if (this.filters.official !== '' && String(event.isOfficial) !== this.filters.official) {
+      return false;
+    }
+
+    if (this.filters.venue && event.venue !== this.filters.venue) {
+      return false;
+    }
+
+    return true;
   }
 
   render() {
@@ -37,6 +71,11 @@ class Timeline {
 
     // Create timeline rows for each venue
     for (const venue of this.schedule.getVenues()) {
+      const filteredEvents = venue.events.filter(event => this.eventMatchesFilters(event));
+
+      if (filteredEvents.length === 0) {
+        continue;
+      }
 
       // <div class="timeline-row"><div class="venue-details"></div><div class="events"></div></div>
 
@@ -49,7 +88,7 @@ class Timeline {
       row.appendChild(container);
 
       // Place events on the timeline
-      venue.events.forEach(event => {
+      filteredEvents.forEach(event => {
         const eventBlock = new EventBlock(event);
 
         eventBlock.positionBetween(startTime, endTime);

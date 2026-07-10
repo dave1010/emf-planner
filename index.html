@@ -32,6 +32,39 @@
             <input type="file" id="favouritesJsonFileInput" accept=".json" />
           </div>
           <div>
+            <h2>Event filters</h2>
+            <details>
+              <summary>Show filters</summary>
+              <div class="event-filters">
+                <label>
+                  <input type="checkbox" id="filterFavouritesOnly" />
+                  Favourites only
+                </label>
+                <label>
+                  Type
+                  <select id="filterType">
+                    <option value="">All types</option>
+                  </select>
+                </label>
+                <label>
+                  Official
+                  <select id="filterOfficial">
+                    <option value="">All events</option>
+                    <option value="true">Official only</option>
+                    <option value="false">Unofficial only</option>
+                  </select>
+                </label>
+                <label>
+                  Venue
+                  <select id="filterVenue">
+                    <option value="">All venues</option>
+                  </select>
+                </label>
+                <button type="button" id="resetFilters">Reset filters</button>
+              </div>
+            </details>
+          </div>
+          <div>
             <h2>Add to home screen</h2>
             <p>Tap your browser's menu or share button, then <strong>Install app</strong> or <strong>Add to Home screen</strong>.</p>
           </div>
