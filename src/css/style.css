@@ -87,38 +87,45 @@ h1 strong {
     justify-content: flex-end;
 }
 
-.controls-panel {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(min(18rem, 100%), 1fr));
-    gap: 1rem;
+.settings-panel {
     padding: 1rem clamp(0.75rem, 2vw, 1.5rem);
     background: rgba(23, 38, 14, 0.88);
     border-bottom: 1px solid rgba(207, 204, 192, 0.22);
     z-index: 2;
 }
 
-.controls-panel[hidden] {
+.settings-panel[hidden] {
     display: none;
 }
 
-.control-card {
+.settings-card {
     --border-color: rgba(207, 204, 192, 0.28);
     --border-radius: 0.85rem;
-    color: #fff;
+    max-width: 56rem;
+    color: #1f241c;
 }
 
-.control-card h2 {
+.settings-card h2 {
     margin: 0;
-    color: var(--light-green);
+    color: var(--dark-red);
     font-size: 1rem;
 }
 
-.control-card p,
-.control-card ol {
+.settings-card wa-tab,
+.settings-card wa-tab-panel {
+    color: #1f241c;
+}
+
+.settings-card a {
+    color: var(--blue);
+}
+
+.settings-card p,
+.settings-card ol {
     margin-top: 0;
 }
 
-.control-card :is(input, select) {
+.settings-card :is(input, select) {
     border: 1px solid rgba(207, 204, 192, 0.5);
     border-radius: 0.45rem;
     background: rgba(255, 255, 255, 0.96);
@@ -140,7 +147,7 @@ h1 strong {
 
 .field-stack span,
 .checkbox-field span {
-    color: var(--cream);
+    color: #27301f;
     font-weight: 700;
 }
 
@@ -189,7 +196,9 @@ h1 strong {
 }
 
 .timeline-events-wrapper .event-block {
+    box-sizing: content-box;
     height: 32px;
+    line-height: 16px;
     background-color: var(--dark-green);
     border: 1px solid #333;
     border-radius: 4px;

@@ -20,14 +20,14 @@ const addOptions = (selectElement, values) => {
   });
 };
 
-const attachControlsToggle = () => {
-  const controlsToggle = document.getElementById('controlsToggle');
-  const controlsPanel = document.getElementById('controlsPanel');
+const attachSettingsToggle = () => {
+  const settingsToggle = document.getElementById('settingsToggle');
+  const settingsPanel = document.getElementById('settingsPanel');
 
-  controlsToggle.addEventListener('click', () => {
-    const isHidden = controlsPanel.hidden;
-    controlsPanel.hidden = !isHidden;
-    controlsToggle.setAttribute('aria-expanded', String(isHidden));
+  settingsToggle.addEventListener('click', () => {
+    const isHidden = settingsPanel.hidden;
+    settingsPanel.hidden = !isHidden;
+    settingsToggle.setAttribute('aria-expanded', String(isHidden));
   });
 };
 
@@ -64,7 +64,7 @@ const attachEventFilters = (timeline, schedule) => {
 };
 
 document.addEventListener('DOMContentLoaded', async () => {
-  attachControlsToggle();
+  attachSettingsToggle();
 
   const data = await fetchData('https://www.emfcamp.org/schedule/2026.json');
 
