@@ -20,65 +20,74 @@
       </div>
 
       <nav class="header-actions" aria-label="Planner actions">
-        <wa-button id="controlsToggle" appearance="filled" variant="brand" size="small" aria-expanded="false" aria-controls="controlsPanel">
-          Controls
-        </wa-button>
-        <wa-button href="https://github.com/dave1010/emf-planner" target="_blank" appearance="outlined" variant="neutral" size="small">
-          About
+        <wa-button id="settingsToggle" appearance="filled" variant="brand" size="small" aria-label="Open settings" title="Settings" aria-expanded="false" aria-controls="settingsPanel">
+          <span aria-hidden="true">⚙</span>
         </wa-button>
       </nav>
     </header>
 
-    <section id="controlsPanel" class="controls-panel" hidden aria-label="Planner controls">
-      <wa-card class="control-card">
-        <h2 slot="header">Favourites</h2>
-        <p>You need to manually re-import your favourites <em>whenever you change them</em>, but it only takes a second:</p>
-        <ol>
-          <li>Make sure you can see your favourites on the <a href="https://www.emfcamp.org/favourites" target="_blank">EMF site</a>.</li>
-          <li><a href="https://www.emfcamp.org/favourites.json" target="_blank">Long press or right click on this link</a>.</li>
-          <li>Select <em>Download link</em> or <em>Save Link As...</em></li>
-          <li>Upload the downloaded <code>favourites.json</code> file below.</li>
-        </ol>
-        <label class="field-stack">
-          <span>Upload favourites JSON</span>
-          <input type="file" id="favouritesJsonFileInput" accept=".json" />
-        </label>
-      </wa-card>
+    <section id="settingsPanel" class="settings-panel" hidden aria-label="Planner settings">
+      <wa-card class="settings-card">
+        <h2 slot="header">Settings</h2>
+        <wa-tab-group>
+          <wa-tab slot="nav" panel="favourites">Favourites</wa-tab>
+          <wa-tab slot="nav" panel="filters">Filters</wa-tab>
+          <wa-tab slot="nav" panel="install">Add to home screen</wa-tab>
+          <wa-tab slot="nav" panel="about">About</wa-tab>
 
-      <wa-card class="control-card">
-        <h2 slot="header">Event filters</h2>
-        <div class="event-filters">
-          <label class="checkbox-field">
-            <input type="checkbox" id="filterFavouritesOnly" />
-            <span>Favourites only</span>
-          </label>
-          <label class="field-stack">
-            <span>Type</span>
-            <select id="filterType">
-              <option value="">All types</option>
-            </select>
-          </label>
-          <label class="field-stack">
-            <span>Official</span>
-            <select id="filterOfficial">
-              <option value="">All events</option>
-              <option value="true">Official only</option>
-              <option value="false">Unofficial only</option>
-            </select>
-          </label>
-          <label class="field-stack">
-            <span>Venue</span>
-            <select id="filterVenue">
-              <option value="">All venues</option>
-            </select>
-          </label>
-          <wa-button type="button" id="resetFilters" appearance="outlined" variant="neutral">Reset filters</wa-button>
-        </div>
-      </wa-card>
+          <wa-tab-panel name="favourites">
+            <p>You need to manually re-import your favourites <em>whenever you change them</em>, but it only takes a second:</p>
+            <ol>
+              <li>Make sure you can see your favourites on the <a href="https://www.emfcamp.org/favourites" target="_blank">EMF site</a>.</li>
+              <li><a href="https://www.emfcamp.org/favourites.json" target="_blank">Long press or right click on this link</a>.</li>
+              <li>Select <em>Download link</em> or <em>Save Link As...</em></li>
+              <li>Upload the downloaded <code>favourites.json</code> file below.</li>
+            </ol>
+            <label class="field-stack">
+              <span>Upload favourites JSON</span>
+              <input type="file" id="favouritesJsonFileInput" accept=".json" />
+            </label>
+          </wa-tab-panel>
 
-      <wa-card class="control-card install-card">
-        <h2 slot="header">Add to home screen</h2>
-        <p>Tap your browser's menu or share button, then <strong>Install app</strong> or <strong>Add to Home screen</strong>.</p>
+          <wa-tab-panel name="filters">
+            <div class="event-filters">
+              <label class="checkbox-field">
+                <input type="checkbox" id="filterFavouritesOnly" />
+                <span>Favourites only</span>
+              </label>
+              <label class="field-stack">
+                <span>Type</span>
+                <select id="filterType">
+                  <option value="">All types</option>
+                </select>
+              </label>
+              <label class="field-stack">
+                <span>Official</span>
+                <select id="filterOfficial">
+                  <option value="">All events</option>
+                  <option value="true">Official only</option>
+                  <option value="false">Unofficial only</option>
+                </select>
+              </label>
+              <label class="field-stack">
+                <span>Venue</span>
+                <select id="filterVenue">
+                  <option value="">All venues</option>
+                </select>
+              </label>
+              <wa-button type="button" id="resetFilters" appearance="outlined" variant="neutral">Reset filters</wa-button>
+            </div>
+          </wa-tab-panel>
+
+          <wa-tab-panel name="install">
+            <p>Tap your browser's menu or share button, then <strong>Install app</strong> or <strong>Add to Home screen</strong>.</p>
+          </wa-tab-panel>
+
+          <wa-tab-panel name="about">
+            <p>EMP helps you plan your time at Electromagnetic Field by showing the schedule on a 2D timetable.</p>
+            <p><a href="https://github.com/dave1010/emf-planner" target="_blank">View the project on GitHub</a>.</p>
+          </wa-tab-panel>
+        </wa-tab-group>
       </wa-card>
     </section>
 
