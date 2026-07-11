@@ -81,7 +81,8 @@ const formatVenueDistance = (userLatlon, venueLatlon) => {
 
   const distance = Math.round(calculateDistanceMeters(userLatlon, venueLatlon));
   const direction = calculateCompassDirection(userLatlon, venueLatlon);
-  return `${distance}m ${direction}`;
+  const walkingMinutes = Math.max(1, Math.ceil(distance / 84));
+  return `${distance}m ${direction} 🚶${walkingMinutes}min`;
 };
 
 const createLocationTracker = () => {
@@ -135,6 +136,37 @@ const formatEventDayTime = (date) => new Intl.DateTimeFormat(undefined, {
   hour: '2-digit',
   minute: '2-digit',
 }).format(date);
+
+const formatCountdownDuration = (milliseconds) => {
+  const totalMinutes = Math.max(0, Math.ceil(milliseconds / (60 * 1000)));
+  const days = Math.floor(totalMinutes / (24 * 60));
+  const hours = Math.floor((totalMinutes % (24 * 60)) / 60);
+  const minutes = totalMinutes % 60;
+  const parts = [];
+
+  if (days) {
+    parts.push(`${days}d`);
+  }
+
+  if (hours || days) {
+    parts.push(`${hours}h`);
+  }
+
+  parts.push(`${minutes}m`);
+  return parts.join(' ');
+};
+
+const formatEventCountdown = (event, now = new Date()) => {
+  if (now < event.start_date) {
+    return `Starts in ${formatCountdownDuration(event.start_date - now)}`;
+  }
+
+  if (now < event.end_date) {
+    return `Ends in ${formatCountdownDuration(event.end_date - now)}`;
+  }
+
+  return '';
+};
 
 const appendDetail = (detailsList, label, value) => {
   if (!value) {
@@ -243,7 +275,11 @@ const attachEventDetailsPanel = (locationTracker) => {
     titleIcon.setAttribute('variant', 'solid');
     title.append(document.createTextNode(`${event.title} `), titleIcon);
     title.href = event.link;
-    time.innerText = `${formatEventDayTime(event.start_date)}–${formatEventDayTime(event.end_date)}`;
+    const countdown = formatEventCountdown(event);
+    time.innerText = [
+      `${formatEventDayTime(event.start_date)}–${formatEventDayTime(event.end_date)}`,
+      countdown,
+    ].filter(Boolean).join(' · ');
     detailsList.innerHTML = '';
     text.innerHTML = '';
     const venueDetail = getVenueDetail(event, locationTracker);
@@ -258,6 +294,36 @@ const attachEventDetailsPanel = (locationTracker) => {
     splitPanel.classList.remove('no-event-selected');
     splitPanel.position = 60;
   };
+};
+
+
+const attachMiddayJumpButtons = (timeline, schedule) => {
+  const container = document.getElementById('middayJumpButtons');
+  if (!container) {
+    return;
+  }
+
+  container.innerHTML = '';
+  const startTime = schedule.getStartDate();
+  const endTime = schedule.getEndDate();
+  const currentDate = new Date(startTime);
+  currentDate.setHours(12, 0, 0, 0);
+
+  if (currentDate < startTime) {
+    currentDate.setDate(currentDate.getDate() + 1);
+  }
+
+  while (currentDate < endTime) {
+    const buttonDate = new Date(currentDate);
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.className = 'midday-jump-button';
+    button.innerText = buttonDate.toLocaleDateString('en-GB', { weekday: 'narrow' });
+    button.title = `Skip to midday on ${buttonDate.toLocaleDateString('en-GB', { weekday: 'long', month: 'short', day: 'numeric' })}`;
+    button.addEventListener('click', () => timeline.goToTime(buttonDate));
+    container.appendChild(button);
+    currentDate.setDate(currentDate.getDate() + 1);
+  }
 };
 
 const attachEventFilters = (timeline, schedule, locationTracker) => {
@@ -319,6 +385,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   const showEventDetails = attachEventDetailsPanel(locationTracker);
   const timelineElement = document.getElementById('timeline');
   const timeline = new Timeline(timelineElement, schedule, showEventDetails);
+  attachMiddayJumpButtons(timeline, schedule);
   locationTracker.subscribe(({ position }) => timeline.setUserLatlon(position));
   attachEventFilters(timeline, schedule, locationTracker);
 

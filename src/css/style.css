@@ -70,6 +70,43 @@ h1 strong {
     display: flex;
     align-items: center;
     justify-content: flex-end;
+    gap: 0.5rem;
+}
+
+.midday-jump-buttons {
+    display: inline-flex;
+    overflow: hidden;
+    border: 1px solid rgba(207, 204, 192, 0.45);
+    border-radius: 0.5rem;
+}
+
+.midday-jump-button {
+    min-width: 1.8rem;
+    border: 0;
+    border-right: 1px solid rgba(207, 204, 192, 0.28);
+    background: rgba(207, 204, 192, 0.12);
+    color: #fff;
+    cursor: pointer;
+    font: inherit;
+    font-weight: 700;
+    line-height: 1;
+    padding: 0.45rem 0.5rem;
+}
+
+.midday-jump-button:last-child {
+    border-right: 0;
+}
+
+.midday-jump-button:hover,
+.midday-jump-button:focus-visible {
+    background: var(--light-green);
+    color: var(--dark-green);
+}
+
+.settings-panel::part(header),
+.settings-panel::part(title) {
+    background: var(--dark-red);
+    color: #fff;
 }
 
 .settings-panel::part(body) {
@@ -102,7 +139,11 @@ h1 strong {
     margin-top: 0;
 }
 
-.settings-tabs :is(input, select) {
+.settings-tabs input[type="checkbox"] {
+    accent-color: var(--light-green);
+}
+
+.settings-tabs :is(input:not([type="checkbox"]), select) {
     border: 1px solid rgba(207, 204, 192, 0.5);
     border-radius: 0.45rem;
     background: rgba(255, 255, 255, 0.96);
@@ -205,6 +246,17 @@ h1 strong {
 
 .timeline-header-row .hour, .timeline-header-row .day {
     padding: 0 5px;
+}
+
+.timeline-header-row .day {
+    box-sizing: border-box;
+    overflow: clip;
+}
+
+.timeline-header-row .day-label {
+    position: sticky;
+    left: 4px;
+    display: inline-block;
 }
 
 /* fixed to left */

@@ -17,6 +17,7 @@
       <h1><strong>E</strong>lectro<strong>M</strong>agnetic Field <strong>P</strong>lanner</h1>
 
       <nav class="header-actions" aria-label="Planner actions">
+        <div id="middayJumpButtons" class="midday-jump-buttons" role="group" aria-label="Skip to midday"></div>
         <wa-button id="settingsToggle" appearance="filled" variant="brand" size="small" aria-label="Open settings" title="Settings" aria-expanded="false" aria-controls="settingsPanel">
           <span aria-hidden="true">⚙</span>
         </wa-button>
@@ -24,12 +25,12 @@
     </header>
 
     <wa-drawer id="settingsPanel" class="settings-panel" label="Settings" placement="end">
-      <wa-tab-group class="settings-tabs">
-        <wa-tab slot="nav" panel="favourites">Favourites</wa-tab>
+      <wa-tab-group class="settings-tabs" active="favourites">
+        <wa-tab slot="nav" panel="favourites" active>Favourites</wa-tab>
         <wa-tab slot="nav" panel="filters">Filters</wa-tab>
         <wa-tab slot="nav" panel="about">About</wa-tab>
 
-        <wa-tab-panel name="favourites">
+        <wa-tab-panel name="favourites" active>
           <p>You need to manually re-import your favourites <em>whenever you change them</em>, but it only takes a second:</p>
           <ol>
             <li>Make sure you can see your favourites on the <a href="https://www.emfcamp.org/favourites" target="_blank">EMF site</a>.</li>
