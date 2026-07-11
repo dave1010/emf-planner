@@ -347,3 +347,33 @@ h1 strong {
 .event-details-list dd {
     margin: 0;
 }
+
+.venue-distance {
+    display: inline-flex;
+    align-items: center;
+    margin-left: 0.5rem;
+    color: var(--cream);
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.venue-distance::before {
+    content: "";
+}
+
+.venue-distance-button {
+    border: 1px solid rgba(207, 204, 192, 0.55);
+    border-radius: 999px;
+    background: rgba(207, 204, 192, 0.12);
+    color: var(--cream);
+    cursor: pointer;
+    font: inherit;
+    font-size: 0.9em;
+    padding: 0.12rem 0.5rem;
+}
+
+.venue-distance-button:hover,
+.venue-distance-button:focus-visible {
+    background: var(--light-green);
+    color: var(--dark-green);
+}

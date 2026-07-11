@@ -34,6 +34,102 @@ const attachSettingsToggle = () => {
   });
 };
 
+
+const COMPASS_DIRECTIONS = ['N', 'NE', 'E', 'SE', 'S', 'SW', 'W', 'NW'];
+const GEOLOCATION_OPTIONS = {
+  enableHighAccuracy: true,
+  maximumAge: 15000,
+  timeout: 10000,
+};
+
+const toRadians = (degrees) => degrees * Math.PI / 180;
+const toDegrees = (radians) => radians * 180 / Math.PI;
+
+const isValidLatlon = (latlon) => Array.isArray(latlon)
+  && latlon.length >= 2
+  && latlon.every(coordinate => Number.isFinite(coordinate));
+
+const calculateDistanceMeters = ([fromLatitude, fromLongitude], [toLatitude, toLongitude]) => {
+  const earthRadiusMeters = 6371000;
+  const latitudeDelta = toRadians(toLatitude - fromLatitude);
+  const longitudeDelta = toRadians(toLongitude - fromLongitude);
+  const fromLatitudeRadians = toRadians(fromLatitude);
+  const toLatitudeRadians = toRadians(toLatitude);
+
+  const haversine = Math.sin(latitudeDelta / 2) ** 2
+    + Math.cos(fromLatitudeRadians) * Math.cos(toLatitudeRadians) * Math.sin(longitudeDelta / 2) ** 2;
+
+  return 2 * earthRadiusMeters * Math.atan2(Math.sqrt(haversine), Math.sqrt(1 - haversine));
+};
+
+const calculateCompassDirection = ([fromLatitude, fromLongitude], [toLatitude, toLongitude]) => {
+  const fromLatitudeRadians = toRadians(fromLatitude);
+  const toLatitudeRadians = toRadians(toLatitude);
+  const longitudeDelta = toRadians(toLongitude - fromLongitude);
+  const y = Math.sin(longitudeDelta) * Math.cos(toLatitudeRadians);
+  const x = Math.cos(fromLatitudeRadians) * Math.sin(toLatitudeRadians)
+    - Math.sin(fromLatitudeRadians) * Math.cos(toLatitudeRadians) * Math.cos(longitudeDelta);
+  const bearing = (toDegrees(Math.atan2(y, x)) + 360) % 360;
+
+  return COMPASS_DIRECTIONS[Math.round(bearing / 45) % COMPASS_DIRECTIONS.length];
+};
+
+const formatVenueDistance = (userLatlon, venueLatlon) => {
+  if (!isValidLatlon(userLatlon) || !isValidLatlon(venueLatlon)) {
+    return '';
+  }
+
+  const distance = Math.round(calculateDistanceMeters(userLatlon, venueLatlon));
+  const direction = calculateCompassDirection(userLatlon, venueLatlon);
+  return `${distance}m ${direction}`;
+};
+
+const createLocationTracker = () => {
+  const listeners = new Set();
+  let position = null;
+  let error = null;
+  let watchId = null;
+
+  const notify = () => listeners.forEach(listener => listener({ position, error, isWatching: watchId !== null }));
+
+  const start = () => {
+    if (!('geolocation' in navigator)) {
+      error = 'Device location is not supported by this browser.';
+      notify();
+      return;
+    }
+
+    if (watchId !== null) {
+      notify();
+      return;
+    }
+
+    error = null;
+    watchId = navigator.geolocation.watchPosition(
+      ({ coords }) => {
+        position = [coords.latitude, coords.longitude];
+        error = null;
+        notify();
+      },
+      (geolocationError) => {
+        error = geolocationError.message || 'Unable to get device location.';
+        notify();
+      },
+      GEOLOCATION_OPTIONS,
+    );
+    notify();
+  };
+
+  return {
+    start,
+    subscribe(listener) {
+      listeners.add(listener);
+      listener({ position, error, isWatching: watchId !== null });
+      return () => listeners.delete(listener);
+    },
+  };
+};
+
 const formatEventDayTime = (date) => new Intl.DateTimeFormat(undefined, {
   weekday: 'short',
   hour: '2-digit',
@@ -69,20 +165,53 @@ const appendTextSection = (container, className, value) => {
   container.appendChild(section);
 };
 
-const getVenueDetail = (event) => {
-  if (!event.mapLink) {
-    return event.venue;
+const getVenueDetail = (event, locationTracker) => {
+  const container = document.createElement('span');
+  const venueName = event.mapLink ? document.createElement('a') : document.createElement('span');
+
+  if (event.mapLink) {
+    venueName.href = event.mapLink;
+    venueName.target = '_blank';
+    venueName.rel = 'noopener noreferrer';
   }
 
-  const link = document.createElement('a');
-  link.href = event.mapLink;
-  link.target = '_blank';
-  link.rel = 'noopener noreferrer';
-  link.innerText = event.venue;
-  return link;
+  venueName.innerText = event.venue;
+  container.appendChild(venueName);
+
+  if (!isValidLatlon(event.latlon)) {
+    return container;
+  }
+
+  const distance = document.createElement('span');
+  distance.className = 'venue-distance';
+  container.appendChild(distance);
+
+  const unsubscribe = locationTracker.subscribe(({ position, error, isWatching }) => {
+    const formattedDistance = formatVenueDistance(position, event.latlon);
+
+    if (formattedDistance) {
+      distance.innerText = formattedDistance;
+      distance.title = 'Distance and compass direction from your device to the venue';
+    } else if (isWatching && !error) {
+      distance.innerText = 'locating…';
+      distance.title = 'Waiting for your device location';
+    } else {
+      distance.innerHTML = '';
+      const button = document.createElement('button');
+      button.type = 'button';
+      button.className = 'venue-distance-button';
+      button.innerText = error ? 'Retry location' : 'Show distance';
+      button.title = error || 'Use your device location to show distance and direction to this venue';
+      button.addEventListener('click', locationTracker.start);
+      distance.appendChild(button);
+    }
+  });
+
+  container.unsubscribe = unsubscribe;
+  return container;
 };
 
-const attachEventDetailsPanel = () => {
+const attachEventDetailsPanel = (locationTracker) => {
   const splitPanel = document.getElementById('eventSplitPanel');
   const closeButton = document.getElementById('eventDetailsClose');
   const panel = document.getElementById('eventDetailsPanel');
@@ -91,13 +220,23 @@ const attachEventDetailsPanel = () => {
   const time = document.getElementById('eventDetailsTime');
   const text = document.getElementById('eventDetailsText');
 
+  let unsubscribeVenueDetail = null;
+
   closeButton.addEventListener('click', () => {
+    if (unsubscribeVenueDetail) {
+      unsubscribeVenueDetail();
+      unsubscribeVenueDetail = null;
+    }
     panel.hidden = true;
     splitPanel.classList.add('no-event-selected');
     splitPanel.position = 100;
   });
 
   return (event) => {
+    if (unsubscribeVenueDetail) {
+      unsubscribeVenueDetail();
+      unsubscribeVenueDetail = null;
+    }
     title.innerHTML = '';
     const titleIcon = document.createElement('wa-icon');
     titleIcon.setAttribute('name', 'arrow-up-right-from-square');
@@ -107,7 +246,9 @@ const attachEventDetailsPanel = () => {
     time.innerText = `${formatEventDayTime(event.start_date)}–${formatEventDayTime(event.end_date)}`;
     detailsList.innerHTML = '';
     text.innerHTML = '';
-    appendDetail(detailsList, 'Venue', getVenueDetail(event));
+    const venueDetail = getVenueDetail(event, locationTracker);
+    unsubscribeVenueDetail = venueDetail.unsubscribe || null;
+    appendDetail(detailsList, 'Venue', venueDetail);
     appendDetail(detailsList, 'Running', event.names);
     appendDetail(detailsList, 'Type', event.type);
     appendDetail(detailsList, 'Official', event.isOfficial ? 'Yes' : 'No');
@@ -167,7 +308,8 @@ document.addEventListener('DOMContentLoaded', async () => {
   const favouritesFileInput = document.getElementById('favouritesJsonFileInput');
   favouritesDatabase.attachToFileInput(favouritesFileInput, () => timeline.render());
 
-  const showEventDetails = attachEventDetailsPanel();
+  const locationTracker = createLocationTracker();
+  const showEventDetails = attachEventDetailsPanel(locationTracker);
   const timelineElement = document.getElementById('timeline');
   const timeline = new Timeline(timelineElement, schedule, showEventDetails);
   attachEventFilters(timeline, schedule);

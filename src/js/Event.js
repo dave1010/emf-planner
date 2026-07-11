@@ -1,5 +1,5 @@
 class Event {
-  constructor(id, title, start_date, end_date, venue, link, occurrence = null, type = null, isOfficial = false, shortDescription = null, description = null, names = null, mapLink = null) {
+  constructor(id, title, start_date, end_date, venue, link, occurrence = null, type = null, isOfficial = false, shortDescription = null, description = null, names = null, mapLink = null, latlon = null) {
     this.id = id;
     this.title = title;
     this.start_date = new Date(start_date);
@@ -13,6 +13,7 @@ class Event {
     this.description = description;
     this.names = names;
     this.mapLink = mapLink;
+    this.latlon = Array.isArray(latlon) && latlon.length >= 2 ? latlon.map(Number) : null;
     this._isFavourite = false;
     this.onFavouriteChange = null; // Callback for changes
   }
@@ -49,7 +50,8 @@ class Event {
       json.short_description || null,
       json.description || null,
       json.names || null,
-      occurrence.map_link || json.map_link || null
+      occurrence.map_link || json.map_link || null,
+      occurrence.latlon || json.latlon || null
     );
   }
 }
