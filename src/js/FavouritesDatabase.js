@@ -8,6 +8,7 @@ class FavouritesDatabase {
     this.storage = storage; // window.localStorage
     this.key = key;
     this.favourites = []; // list of IDs
+    this.syncedAt = null;
     this.schedule = schedule;
 
     this.load();
@@ -16,6 +17,7 @@ class FavouritesDatabase {
   load() {
     const json = this.storage.getItem(this.key);
     this.favourites = json ? JSON.parse(json) : [];
+    this.syncedAt = this.storage.getItem(`${this.key}:syncedAt`);
     this.schedule.setFavourites(this.favourites);
   }
 
@@ -23,7 +25,13 @@ class FavouritesDatabase {
     const json = JSON.stringify(listOfIds);
     this.favourites = listOfIds;
     this.storage.setItem(this.key, json);
+    this.syncedAt = new Date().toISOString();
+    this.storage.setItem(`${this.key}:syncedAt`, this.syncedAt);
     this.schedule.setFavourites(this.favourites);
+  }
+
+  getSyncedAt() {
+    return this.syncedAt;
   }
 
   attachToFileInput(fileInput, onSave = null) {

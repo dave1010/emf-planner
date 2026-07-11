@@ -503,3 +503,20 @@ h1 strong {
     background: var(--light-green);
     color: var(--dark-green);
 }
+
+.sync-status {
+    border-left: 0.25rem solid var(--light-green);
+    background: rgba(207, 204, 192, 0.12);
+    border-radius: 0.35rem;
+    padding: 0.55rem 0.65rem;
+}
+
+.schedule-refresh {
+    display: grid;
+    gap: 0.6rem;
+    margin: 1rem 0;
+}
+
+.schedule-refresh .sync-status {
+    margin: 0;
+}
