@@ -23,9 +23,8 @@
       </nav>
     </header>
 
-    <section id="settingsPanel" class="settings-panel" hidden aria-label="Planner settings">
+    <wa-drawer id="settingsPanel" class="settings-panel" label="Settings" placement="end">
       <wa-card class="settings-card">
-        <h2 slot="header">Settings</h2>
         <wa-tab-group>
           <wa-tab slot="nav" panel="favourites">Favourites</wa-tab>
           <wa-tab slot="nav" panel="filters">Filters</wa-tab>
@@ -86,9 +85,10 @@
           </wa-tab-panel>
         </wa-tab-group>
       </wa-card>
-    </section>
+    </wa-drawer>
 
     <wa-split-panel id="eventSplitPanel" class="event-split-panel no-event-selected" orientation="vertical" position="100">
+      <wa-icon slot="divider" name="grip-vertical" variant="solid"></wa-icon>
       <main slot="start" class="timeline-wrapper" aria-label="Timetable">
         <div id="timeline" class="timeline-container">Loading...</div>
       </main>
@@ -97,9 +97,10 @@
         <wa-scroller class="event-details-scroller">
           <div class="event-details-content">
             <wa-button id="eventDetailsClose" class="event-details-close" appearance="plain" variant="neutral" size="small" aria-label="Close event details">✕</wa-button>
-            <h2 id="eventDetailsTitle">Event details</h2>
+            <h2><a id="eventDetailsTitle" class="event-details-title-link" href="#" target="_blank" rel="noopener noreferrer">Event details <wa-icon name="arrow-up-right-from-square" variant="solid"></wa-icon></a></h2>
+            <p id="eventDetailsTime" class="event-details-time"></p>
             <dl id="eventDetailsList" class="event-details-list"></dl>
-            <p><a id="eventDetailsLink" href="#" target="_blank" rel="noopener noreferrer">Open event page</a></p>
+            <div id="eventDetailsText" class="event-details-text"></div>
           </div>
         </wa-scroller>
       </aside>

@@ -25,17 +25,17 @@ const attachSettingsToggle = () => {
   const settingsPanel = document.getElementById('settingsPanel');
 
   settingsToggle.addEventListener('click', () => {
-    const isHidden = settingsPanel.hidden;
-    settingsPanel.hidden = !isHidden;
-    settingsToggle.setAttribute('aria-expanded', String(isHidden));
+    settingsPanel.open = !settingsPanel.open;
+    settingsToggle.setAttribute('aria-expanded', String(settingsPanel.open));
+  });
+
+  settingsPanel.addEventListener('wa-after-hide', () => {
+    settingsToggle.setAttribute('aria-expanded', 'false');
   });
 };
 
-
-const formatEventDate = (date) => new Intl.DateTimeFormat(undefined, {
+const formatEventDayTime = (date) => new Intl.DateTimeFormat(undefined, {
   weekday: 'short',
-  day: 'numeric',
-  month: 'short',
   hour: '2-digit',
   minute: '2-digit',
 }).format(date);
@@ -48,8 +48,38 @@ const appendDetail = (detailsList, label, value) => {
   const term = document.createElement('dt');
   term.innerText = label;
   const description = document.createElement('dd');
-  description.innerText = value;
+
+  if (value instanceof Node) {
+    description.appendChild(value);
+  } else {
+    description.innerText = value;
+  }
+
   detailsList.append(term, description);
+};
+
+const appendTextSection = (container, className, value) => {
+  if (!value) {
+    return;
+  }
+
+  const section = document.createElement('p');
+  section.className = className;
+  section.innerText = value;
+  container.appendChild(section);
+};
+
+const getVenueDetail = (event) => {
+  if (!event.mapLink) {
+    return event.venue;
+  }
+
+  const link = document.createElement('a');
+  link.href = event.mapLink;
+  link.target = '_blank';
+  link.rel = 'noopener noreferrer';
+  link.innerText = event.venue;
+  return link;
 };
 
 const attachEventDetailsPanel = () => {
@@ -58,7 +88,8 @@ const attachEventDetailsPanel = () => {
   const panel = document.getElementById('eventDetailsPanel');
   const title = document.getElementById('eventDetailsTitle');
   const detailsList = document.getElementById('eventDetailsList');
-  const link = document.getElementById('eventDetailsLink');
+  const time = document.getElementById('eventDetailsTime');
+  const text = document.getElementById('eventDetailsText');
 
   closeButton.addEventListener('click', () => {
     panel.hidden = true;
@@ -67,14 +98,21 @@ const attachEventDetailsPanel = () => {
   });
 
   return (event) => {
-    title.innerText = event.title;
+    title.innerHTML = '';
+    const titleIcon = document.createElement('wa-icon');
+    titleIcon.setAttribute('name', 'arrow-up-right-from-square');
+    titleIcon.setAttribute('variant', 'solid');
+    title.append(document.createTextNode(`${event.title} `), titleIcon);
+    title.href = event.link;
+    time.innerText = `${formatEventDayTime(event.start_date)}–${formatEventDayTime(event.end_date)}`;
     detailsList.innerHTML = '';
-    appendDetail(detailsList, 'Starts', formatEventDate(event.start_date));
-    appendDetail(detailsList, 'Ends', formatEventDate(event.end_date));
-    appendDetail(detailsList, 'Venue', event.venue);
+    text.innerHTML = '';
+    appendDetail(detailsList, 'Venue', getVenueDetail(event));
+    appendDetail(detailsList, 'Running', event.names);
     appendDetail(detailsList, 'Type', event.type);
     appendDetail(detailsList, 'Official', event.isOfficial ? 'Yes' : 'No');
-    link.href = event.link;
+    appendTextSection(text, 'event-details-short-description', event.shortDescription);
+    appendTextSection(text, 'event-details-description', event.description);
     panel.hidden = false;
     splitPanel.classList.remove('no-event-selected');
     splitPanel.position = 60;
