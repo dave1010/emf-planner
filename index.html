@@ -27,7 +27,7 @@
     <wa-drawer id="settingsPanel" class="settings-panel" label="Settings" placement="end">
       <wa-tab-group class="settings-tabs" active="favourites">
         <wa-tab slot="nav" panel="favourites" active>Favourites</wa-tab>
-        <wa-tab slot="nav" panel="filters">Filters</wa-tab>
+        <wa-tab slot="nav" panel="filters">Filters <span id="filtersActiveIndicator" class="filters-active-indicator" hidden>●</span></wa-tab>
         <wa-tab slot="nav" panel="about">About</wa-tab>
 
         <wa-tab-panel name="favourites" active>
@@ -70,16 +70,16 @@
                 <option value="">All venues</option>
               </select>
             </label>
-            <label class="field-stack">
-              <span>Venue sort</span>
-              <select id="venueSort">
-                <option value="official">Official first</option>
-                <option value="az">A-Z</option>
-                <option value="distance">Distance</option>
-                <option value="next-event">Next event</option>
-              </select>
-            </label>
-            <wa-button type="button" id="resetFilters" appearance="outlined" variant="neutral">Reset filters</wa-button>
+            <fieldset class="field-stack venue-sort-field">
+              <legend>Venue sort</legend>
+              <div id="venueSort" class="venue-sort-buttons" role="radiogroup" aria-label="Venue sort">
+                <button type="button" class="venue-sort-button" data-value="official" aria-pressed="true">Official first</button>
+                <button type="button" class="venue-sort-button" data-value="az" aria-pressed="false">A-Z</button>
+                <button type="button" class="venue-sort-button" data-value="distance" aria-pressed="false">Distance</button>
+                <button type="button" class="venue-sort-button" data-value="next-event" aria-pressed="false">Next event</button>
+              </div>
+            </fieldset>
+            <wa-button type="button" id="resetFilters" class="reset-filters-button" appearance="filled" variant="brand">Reset filters</wa-button>
           </div>
         </wa-tab-panel>
 

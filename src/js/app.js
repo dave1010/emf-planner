@@ -41,6 +41,14 @@ const GEOLOCATION_OPTIONS = {
   maximumAge: 15000,
   timeout: 10000,
 };
+const FILTERS_STORAGE_KEY = 'emf-planner:event-filters';
+const DEFAULT_FILTERS = {
+  favouritesOnly: false,
+  type: '',
+  official: '',
+  venue: '',
+  venueSort: 'official',
+};
 
 const toRadians = (degrees) => degrees * Math.PI / 180;
 const toDegrees = (radians) => radians * 180 / Math.PI;
@@ -313,8 +321,15 @@ const attachMiddayJumpButtons = (timeline, schedule) => {
     currentDate.setDate(currentDate.getDate() + 1);
   }
 
+  const buttonDates = [];
+
   while (currentDate < endTime) {
-    const buttonDate = new Date(currentDate);
+    buttonDates.push(new Date(currentDate));
+    currentDate.setDate(currentDate.getDate() + 1);
+  }
+
+  // The final schedule day only contains events spilling past midnight, so omit it from the jump picker.
+  buttonDates.slice(0, -1).forEach(buttonDate => {
     const button = document.createElement('button');
     button.type = 'button';
     button.className = 'midday-jump-button';
@@ -322,9 +337,34 @@ const attachMiddayJumpButtons = (timeline, schedule) => {
     button.title = `Skip to midday on ${buttonDate.toLocaleDateString('en-GB', { weekday: 'long', month: 'short', day: 'numeric' })}`;
     button.addEventListener('click', () => timeline.goToTime(buttonDate));
     container.appendChild(button);
-    currentDate.setDate(currentDate.getDate() + 1);
+  });
+};
+
+const loadStoredFilters = () => {
+  try {
+    return {
+      ...DEFAULT_FILTERS,
+      ...JSON.parse(window.localStorage.getItem(FILTERS_STORAGE_KEY) || '{}'),
+    };
+  } catch (error) {
+    return { ...DEFAULT_FILTERS };
   }
 };
+
+const saveFilters = (filters) => {
+  window.localStorage.setItem(FILTERS_STORAGE_KEY, JSON.stringify(filters));
+};
+
+const setVenueSortValue = (venueSortInput, value) => {
+  const buttons = [...venueSortInput.querySelectorAll('.venue-sort-button')];
+  const nextValue = buttons.some(button => button.dataset.value === value) ? value : DEFAULT_FILTERS.venueSort;
+  venueSortInput.dataset.value = nextValue;
+  buttons.forEach(button => {
+    button.setAttribute('aria-pressed', String(button.dataset.value === nextValue));
+  });
+};
+
+const getVenueSortValue = (venueSortInput) => venueSortInput.dataset.value || DEFAULT_FILTERS.venueSort;
 
 const attachEventFilters = (timeline, schedule, locationTracker) => {
   const favouritesOnlyInput = document.getElementById('filterFavouritesOnly');
@@ -332,37 +372,64 @@ const attachEventFilters = (timeline, schedule, locationTracker) => {
   const officialInput = document.getElementById('filterOfficial');
   const venueInput = document.getElementById('filterVenue');
   const venueSortInput = document.getElementById('venueSort');
+  const filtersActiveIndicator = document.getElementById('filtersActiveIndicator');
   const resetButton = document.getElementById('resetFilters');
 
   addOptions(typeInput, schedule.getEventTypes());
   addOptions(venueInput, schedule.getVenueNames());
 
-  const applyFilters = () => {
-    timeline.setFilters({
+  const applyFilters = ({ persist = true } = {}) => {
+    const filters = {
       favouritesOnly: favouritesOnlyInput.checked,
       type: typeInput.value,
       official: officialInput.value,
       venue: venueInput.value,
-      venueSort: venueSortInput.value,
-    });
+      venueSort: getVenueSortValue(venueSortInput),
+    };
 
-    if (venueSortInput.value === 'distance') {
+    timeline.setFilters(filters);
+
+    const hasActiveFilters = filters.favouritesOnly || filters.type || filters.official || filters.venue;
+    filtersActiveIndicator.hidden = !hasActiveFilters;
+    filtersActiveIndicator.title = hasActiveFilters ? 'Events are currently filtered' : '';
+
+    if (persist) {
+      saveFilters(filters);
+    }
+
+    if (filters.venueSort === 'distance') {
       locationTracker.start();
     }
   };
 
-  [favouritesOnlyInput, typeInput, officialInput, venueInput, venueSortInput].forEach(input => {
+  const storedFilters = loadStoredFilters();
+  favouritesOnlyInput.checked = Boolean(storedFilters.favouritesOnly);
+  typeInput.value = storedFilters.type;
+  officialInput.value = storedFilters.official;
+  venueInput.value = storedFilters.venue;
+  setVenueSortValue(venueSortInput, storedFilters.venueSort || DEFAULT_FILTERS.venueSort);
+
+  [favouritesOnlyInput, typeInput, officialInput, venueInput].forEach(input => {
     input.addEventListener('change', applyFilters);
   });
 
+  venueSortInput.querySelectorAll('.venue-sort-button').forEach(button => {
+    button.addEventListener('click', () => {
+      setVenueSortValue(venueSortInput, button.dataset.value);
+      applyFilters();
+    });
+  });
+
   resetButton.addEventListener('click', () => {
-    favouritesOnlyInput.checked = false;
-    typeInput.value = '';
-    officialInput.value = '';
-    venueInput.value = '';
-    venueSortInput.value = 'official';
+    favouritesOnlyInput.checked = DEFAULT_FILTERS.favouritesOnly;
+    typeInput.value = DEFAULT_FILTERS.type;
+    officialInput.value = DEFAULT_FILTERS.official;
+    venueInput.value = DEFAULT_FILTERS.venue;
+    setVenueSortValue(venueSortInput, DEFAULT_FILTERS.venueSort);
     applyFilters();
   });
+
+  applyFilters({ persist: false });
 };
 
 document.addEventListener('DOMContentLoaded', async () => {
