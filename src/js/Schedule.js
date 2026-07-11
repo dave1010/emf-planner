@@ -40,7 +40,7 @@ class Schedule {
             this.venues[venueName] = new Venue(venueName);
             this.venues[venueName].events = [];
         }
-        this.venues[venueName].events.push(event);
+        this.venues[venueName].addEvent(event);
     }
 
     getVenues() {

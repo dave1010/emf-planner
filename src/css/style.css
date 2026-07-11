@@ -74,37 +74,35 @@ h1 strong {
 
 .settings-panel::part(body) {
     background: rgba(23, 38, 14, 0.96);
-    padding: 1rem clamp(0.75rem, 2vw, 1.5rem);
+    padding: 0;
 }
 
-.settings-card {
-    --border-color: rgba(207, 204, 192, 0.28);
-    --border-radius: 0.85rem;
-    max-width: 56rem;
-    color: #1f241c;
+.settings-tabs {
+    display: block;
+    color: #fff;
 }
 
-.settings-card h2 {
+.settings-tabs h2 {
     margin: 0;
-    color: var(--dark-red);
+    color: var(--light-green);
     font-size: 1rem;
 }
 
-.settings-card wa-tab,
-.settings-card wa-tab-panel {
-    color: #1f241c;
+.settings-tabs wa-tab,
+.settings-tabs wa-tab-panel {
+    color: #fff;
 }
 
-.settings-card a {
+.settings-tabs a {
     color: var(--blue);
 }
 
-.settings-card p,
-.settings-card ol {
+.settings-tabs p,
+.settings-tabs ol {
     margin-top: 0;
 }
 
-.settings-card :is(input, select) {
+.settings-tabs :is(input, select) {
     border: 1px solid rgba(207, 204, 192, 0.5);
     border-radius: 0.45rem;
     background: rgba(255, 255, 255, 0.96);
@@ -126,7 +124,7 @@ h1 strong {
 
 .field-stack span,
 .checkbox-field span {
-    color: #27301f;
+    color: #fff;
     font-weight: 700;
 }
 

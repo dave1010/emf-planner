@@ -260,11 +260,12 @@ const attachEventDetailsPanel = (locationTracker) => {
   };
 };
 
-const attachEventFilters = (timeline, schedule) => {
+const attachEventFilters = (timeline, schedule, locationTracker) => {
   const favouritesOnlyInput = document.getElementById('filterFavouritesOnly');
   const typeInput = document.getElementById('filterType');
   const officialInput = document.getElementById('filterOfficial');
   const venueInput = document.getElementById('filterVenue');
+  const venueSortInput = document.getElementById('venueSort');
   const resetButton = document.getElementById('resetFilters');
 
   addOptions(typeInput, schedule.getEventTypes());
@@ -276,10 +277,15 @@ const attachEventFilters = (timeline, schedule) => {
       type: typeInput.value,
       official: officialInput.value,
       venue: venueInput.value,
+      venueSort: venueSortInput.value,
     });
+
+    if (venueSortInput.value === 'distance') {
+      locationTracker.start();
+    }
   };
 
-  [favouritesOnlyInput, typeInput, officialInput, venueInput].forEach(input => {
+  [favouritesOnlyInput, typeInput, officialInput, venueInput, venueSortInput].forEach(input => {
     input.addEventListener('change', applyFilters);
   });
 
@@ -288,6 +294,7 @@ const attachEventFilters = (timeline, schedule) => {
     typeInput.value = '';
     officialInput.value = '';
     venueInput.value = '';
+    venueSortInput.value = 'official';
     applyFilters();
   });
 };
@@ -312,7 +319,8 @@ document.addEventListener('DOMContentLoaded', async () => {
   const showEventDetails = attachEventDetailsPanel(locationTracker);
   const timelineElement = document.getElementById('timeline');
   const timeline = new Timeline(timelineElement, schedule, showEventDetails);
-  attachEventFilters(timeline, schedule);
+  locationTracker.subscribe(({ position }) => timeline.setUserLatlon(position));
+  attachEventFilters(timeline, schedule, locationTracker);
 
   // go to 1 hour ago
   timeline.goToTime(Date.now() - 60 * 60 * 1000);
