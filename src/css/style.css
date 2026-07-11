@@ -191,6 +191,9 @@ h1 strong {
     position: absolute;
     font-size: 14px;
     text-decoration: none;
+    font: inherit;
+    text-align: left;
+    cursor: pointer;
 }
 
 .timeline-events-wrapper .event-block.fav {
@@ -253,4 +256,66 @@ h1 strong {
 
 .day {
     background: rgba(131, 3, 131, 0.5);
+}
+/************** EVENT DETAILS **************/
+
+.event-split-panel {
+    flex: 1;
+    min-height: 0;
+    --divider-color: rgba(207, 204, 192, 0.35);
+    --divider-width: 0.35rem;
+}
+
+.event-split-panel.no-event-selected::part(divider) {
+    display: none;
+}
+
+.event-details-panel[hidden] {
+    display: none;
+}
+
+.event-details-panel {
+    position: relative;
+    min-height: 0;
+    background: rgba(23, 38, 14, 0.96);
+    border-top: 1px solid rgba(207, 204, 192, 0.28);
+}
+
+.event-details-scroller {
+    height: 100%;
+}
+
+.event-details-content {
+    box-sizing: border-box;
+    min-height: 100%;
+    padding: 1rem clamp(0.75rem, 2vw, 1.5rem);
+    color: #fff;
+}
+
+.event-details-close {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+}
+
+.event-details-content h2 {
+    margin: 0 2.5rem 1rem 0;
+    color: var(--light-green);
+    font-size: clamp(1.15rem, 2.5vw, 1.5rem);
+}
+
+.event-details-list {
+    display: grid;
+    grid-template-columns: max-content 1fr;
+    gap: 0.45rem 1rem;
+    margin: 0 0 1rem;
+}
+
+.event-details-list dt {
+    color: var(--cream);
+    font-weight: 700;
+}
+
+.event-details-list dd {
+    margin: 0;
 }

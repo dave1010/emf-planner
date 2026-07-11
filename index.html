@@ -88,9 +88,22 @@
       </wa-card>
     </section>
 
-    <main class="timeline-wrapper" aria-label="Timetable">
-      <div id="timeline" class="timeline-container">Loading...</div>
-    </main>
+    <wa-split-panel id="eventSplitPanel" class="event-split-panel no-event-selected" orientation="vertical" position="100">
+      <main slot="start" class="timeline-wrapper" aria-label="Timetable">
+        <div id="timeline" class="timeline-container">Loading...</div>
+      </main>
+
+      <aside slot="end" id="eventDetailsPanel" class="event-details-panel" aria-label="Event details" hidden>
+        <wa-scroller class="event-details-scroller">
+          <div class="event-details-content">
+            <wa-button id="eventDetailsClose" class="event-details-close" appearance="plain" variant="neutral" size="small" aria-label="Close event details">✕</wa-button>
+            <h2 id="eventDetailsTitle">Event details</h2>
+            <dl id="eventDetailsList" class="event-details-list"></dl>
+            <p><a id="eventDetailsLink" href="#" target="_blank" rel="noopener noreferrer">Open event page</a></p>
+          </div>
+        </wa-scroller>
+      </aside>
+    </wa-split-panel>
   </div>
 </body>
 
