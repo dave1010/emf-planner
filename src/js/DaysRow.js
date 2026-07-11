@@ -15,7 +15,10 @@ class DayBlock extends TimelineBlock {
         const dayBlock = document.createElement('div');
         dayBlock.className = 'day';
         dayBlock.classList.add('timeline-block');
-        dayBlock.innerText = this.startDate.toLocaleDateString('en-GB', { weekday: 'short' });
+        const dayLabel = document.createElement('span');
+        dayLabel.className = 'day-label';
+        dayLabel.innerText = this.startDate.toLocaleDateString('en-GB', { weekday: 'short' });
+        dayBlock.appendChild(dayLabel);
 
         // Generate a background color based on the day of the week
         dayBlock.style.backgroundColor = `hsla(${(this.startDate.getDay() * 40) % 360}, 50%, 30%, 1)`;
