@@ -72,15 +72,9 @@ h1 strong {
     justify-content: flex-end;
 }
 
-.settings-panel {
+.settings-panel::part(body) {
+    background: rgba(23, 38, 14, 0.96);
     padding: 1rem clamp(0.75rem, 2vw, 1.5rem);
-    background: rgba(23, 38, 14, 0.88);
-    border-bottom: 1px solid rgba(207, 204, 192, 0.22);
-    z-index: 2;
-}
-
-.settings-panel[hidden] {
-    display: none;
 }
 
 .settings-card {
@@ -185,7 +179,8 @@ h1 strong {
     white-space: normal;
     overflow: hidden;
     text-overflow: ellipsis;
-    padding: 5px;
+    /* Intentionally compact so two lines of timetable text remain visible. */
+    padding: 1px 4px;
     color: #fff;
     display: inline-block;
     position: absolute;
@@ -263,7 +258,11 @@ h1 strong {
     flex: 1;
     min-height: 0;
     --divider-color: rgba(207, 204, 192, 0.35);
-    --divider-width: 0.35rem;
+    --divider-width: 20px;
+}
+
+.event-split-panel wa-icon[slot="divider"] {
+    color: var(--cream);
 }
 
 .event-split-panel.no-event-selected::part(divider) {
@@ -299,9 +298,23 @@ h1 strong {
 }
 
 .event-details-content h2 {
-    margin: 0 2.5rem 1rem 0;
-    color: var(--light-green);
+    margin: 0 2.5rem 0.35rem 0;
     font-size: clamp(1.15rem, 2.5vw, 1.5rem);
+}
+
+.event-details-title-link {
+    color: var(--light-green);
+    text-decoration: underline;
+}
+
+.event-details-title-link wa-icon {
+    font-size: 0.75em;
+}
+
+.event-details-time {
+    margin: 0 0 1rem;
+    color: var(--cream);
+    font-weight: 700;
 }
 
 .event-details-list {
@@ -309,6 +322,16 @@ h1 strong {
     grid-template-columns: max-content 1fr;
     gap: 0.45rem 1rem;
     margin: 0 0 1rem;
+}
+
+.event-details-text p {
+    margin: 0 0 1rem;
+    white-space: pre-line;
+}
+
+.event-details-short-description {
+    color: var(--cream);
+    font-weight: 700;
 }
 
 .event-details-list dt {
