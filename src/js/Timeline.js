@@ -5,9 +5,10 @@ import HoursTicksRow from './HoursTicksRow.js';
 
 
 class Timeline {
-  constructor(domElement, schedule) {
+  constructor(domElement, schedule, onEventSelect = null) {
     this.domElement = domElement;
     this.schedule = schedule;
+    this.onEventSelect = onEventSelect;
     this.filters = {
       favouritesOnly: false,
       type: '',
@@ -89,7 +90,7 @@ class Timeline {
 
       // Place events on the timeline
       filteredEvents.forEach(event => {
-        const eventBlock = new EventBlock(event);
+        const eventBlock = new EventBlock(event, this.onEventSelect);
 
         eventBlock.positionBetween(startTime, endTime);
 
