@@ -2,13 +2,115 @@ import Schedule from "./Schedule.js";
 import Timeline from "./Timeline.js";
 import FavouritesDatabase from "./FavouritesDatabase.js";
 
-const fetchData = async (url) => {
+const SCHEDULE_URL = 'https://www.emfcamp.org/schedule/2026.json';
+const SCHEDULE_STORAGE_KEY = 'emf-planner:schedule-data';
+const SCHEDULE_METADATA_STORAGE_KEY = 'emf-planner:schedule-metadata';
+
+const readJsonStorage = (key, fallback = null) => {
   try {
-    const response = await fetch(url);
-    return await response.ok ? response.json() : null;
+    const value = window.localStorage.getItem(key);
+    return value ? JSON.parse(value) : fallback;
   } catch (error) {
-    return null;
+    return fallback;
   }
+};
+
+const writeJsonStorage = (key, value) => {
+  window.localStorage.setItem(key, JSON.stringify(value));
+};
+
+const fetchJson = async (url, { cache = 'default' } = {}) => {
+  const response = await fetch(url, { cache });
+  return response.ok ? response.json() : null;
+};
+
+const loadScheduleData = async ({ forceRefresh = false } = {}) => {
+  try {
+    const data = await fetchJson(SCHEDULE_URL, { cache: forceRefresh ? 'reload' : 'default' });
+
+    if (data) {
+      const metadata = {
+        fetchedAt: new Date().toISOString(),
+        source: 'network',
+      };
+      writeJsonStorage(SCHEDULE_STORAGE_KEY, data);
+      writeJsonStorage(SCHEDULE_METADATA_STORAGE_KEY, metadata);
+      return { data, metadata, fromCache: false };
+    }
+  } catch (error) {
+    // Fall back to the locally stored copy below.
+  }
+
+  const data = readJsonStorage(SCHEDULE_STORAGE_KEY);
+  const metadata = readJsonStorage(SCHEDULE_METADATA_STORAGE_KEY);
+  return data ? { data, metadata: { ...metadata, source: 'local' }, fromCache: true } : null;
+};
+
+const registerServiceWorker = () => {
+  if (!('serviceWorker' in navigator)) {
+    return;
+  }
+
+  navigator.serviceWorker.register('/service-worker.js').catch(() => {
+    // Offline support is best-effort on unsupported or restricted browsers.
+  });
+};
+
+
+const formatDateTime = (date) => new Intl.DateTimeFormat(undefined, {
+  dateStyle: 'medium',
+  timeStyle: 'short',
+}).format(date);
+
+const formatAge = (date, now = new Date()) => {
+  const seconds = Math.max(0, Math.floor((now - date) / 1000));
+  const units = [
+    ['day', 86400],
+    ['hour', 3600],
+    ['minute', 60],
+  ];
+
+  for (const [unit, unitSeconds] of units) {
+    const value = Math.floor(seconds / unitSeconds);
+    if (value >= 1) {
+      return `${value} ${unit}${value === 1 ? '' : 's'} ago`;
+    }
+  }
+
+  return 'just now';
+};
+
+const describeTimestamp = (isoTimestamp, emptyText) => {
+  if (!isoTimestamp) {
+    return emptyText;
+  }
+
+  const date = new Date(isoTimestamp);
+  if (Number.isNaN(date.getTime())) {
+    return emptyText;
+  }
+
+  return `${formatDateTime(date)} (${formatAge(date)})`;
+};
+
+const updateScheduleRefreshStatus = (metadata, { fromCache = false, message = '' } = {}) => {
+  const status = document.getElementById('scheduleRefreshStatus');
+  if (!status) {
+    return;
+  }
+
+  const timestamp = describeTimestamp(metadata?.fetchedAt, 'No schedule data has been cached on this device yet.');
+  const source = fromCache || metadata?.source === 'local' ? 'Using cached schedule data.' : 'Schedule data is up to date.';
+  status.innerText = message || `${source} Last refresh: ${timestamp}`;
+};
+
+const updateFavouritesSyncStatus = (favouritesDatabase) => {
+  const status = document.getElementById('favouritesSyncStatus');
+  if (!status) {
+    return;
+  }
+
+  status.innerText = `Last favourites import: ${describeTimestamp(favouritesDatabase.getSyncedAt(), 'never on this device')}.`;
 };
 
 const addOptions = (selectElement, values) => {
@@ -433,20 +535,29 @@ const attachEventFilters = (timeline, schedule, locationTracker) => {
 };
 
 document.addEventListener('DOMContentLoaded', async () => {
+  registerServiceWorker();
   attachSettingsToggle();
 
-  const data = await fetchData('https://www.emfcamp.org/schedule/2026.json');
+  const scheduleResult = await loadScheduleData();
 
-  if (!data) {
-    alert('Failed to load schedule data')
+  if (!scheduleResult) {
+    updateScheduleRefreshStatus(null, { message: 'Schedule data could not be loaded. Connect to the internet and try Refresh schedule now.' });
+    document.getElementById('timeline').innerText = 'Failed to load schedule data.';
+    return;
   }
 
-  const schedule = Schedule.createFromJson(data);
+  updateScheduleRefreshStatus(scheduleResult.metadata, { fromCache: scheduleResult.fromCache });
+
+  const schedule = Schedule.createFromJson(scheduleResult.data);
 
   const favouritesDatabase = new FavouritesDatabase(window.localStorage, 'favourites', schedule);
+  updateFavouritesSyncStatus(favouritesDatabase);
   
   const favouritesFileInput = document.getElementById('favouritesJsonFileInput');
-  favouritesDatabase.attachToFileInput(favouritesFileInput, () => timeline.render());
+  favouritesDatabase.attachToFileInput(favouritesFileInput, () => {
+    updateFavouritesSyncStatus(favouritesDatabase);
+    timeline.render();
+  });
 
   const locationTracker = createLocationTracker();
   const showEventDetails = attachEventDetailsPanel(locationTracker);
@@ -456,8 +567,21 @@ document.addEventListener('DOMContentLoaded', async () => {
   locationTracker.subscribe(({ position }) => timeline.setUserLatlon(position));
   attachEventFilters(timeline, schedule, locationTracker);
 
+  const refreshScheduleButton = document.getElementById('refreshSchedule');
+  refreshScheduleButton.addEventListener('click', async () => {
+    refreshScheduleButton.disabled = true;
+    updateScheduleRefreshStatus(scheduleResult.metadata, { message: 'Refreshing schedule data…' });
+    const refreshed = await loadScheduleData({ forceRefresh: true });
+
+    if (!refreshed || refreshed.fromCache) {
+      refreshScheduleButton.disabled = false;
+      updateScheduleRefreshStatus(scheduleResult.metadata, { fromCache: true, message: 'Could not refresh while offline. Keeping the cached schedule data.' });
+      return;
+    }
+
+    window.location.reload();
+  });
+
   // go to 1 hour ago
   timeline.goToTime(Date.now() - 60 * 60 * 1000);
-
-  //favouritesDatabase.save([412]);
 });

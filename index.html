@@ -38,6 +38,7 @@
             <li>Select <em>Download link</em> or <em>Save Link As...</em></li>
             <li>Upload the downloaded <code>favourites.json</code> file below.</li>
           </ol>
+          <p id="favouritesSyncStatus" class="sync-status">Favourites have not been imported on this device yet.</p>
           <label class="field-stack">
             <span>Upload favourites JSON</span>
             <input type="file" id="favouritesJsonFileInput" accept=".json" />
@@ -86,6 +87,11 @@
         <wa-tab-panel name="about">
           <p>EMP helps you plan your time at Electromagnetic Field by showing the schedule on a 2D timetable.</p>
           <p><a href="https://www.emfcamp.org/schedule/2026" target="_blank" rel="noopener noreferrer">View the official EMF 2026 schedule</a>.</p>
+          <section class="schedule-refresh" aria-labelledby="scheduleRefreshHeading">
+            <h2 id="scheduleRefreshHeading">Schedule data</h2>
+            <p id="scheduleRefreshStatus" class="sync-status">Checking schedule freshness…</p>
+            <wa-button type="button" id="refreshSchedule" appearance="filled" variant="brand">Refresh schedule now</wa-button>
+          </section>
           <p><a href="https://github.com/dave1010/emf-planner" target="_blank" rel="noopener noreferrer">View the project on GitHub</a>.</p>
           <h2>Add to home screen</h2>
           <p>Tap your browser's menu or share button, then <strong>Install app</strong> or <strong>Add to Home screen</strong>.</p>
